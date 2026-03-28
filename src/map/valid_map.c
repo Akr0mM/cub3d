@@ -6,50 +6,75 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 11:28:33 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/25 13:35:14 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/28 18:30:38 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
 
 static void	valid_map_char(t_map *map, int start);
-static int	check_textures_and_colors(t_map *map);
+static void	check_textures_and_colors(t_map *map, int map_start);
+static int	find_map_start(t_map *map);
+static int	check_colors(t_map *map, int map_start);
 
 void	check_valid_map(t_map *map)
 {
 	int	map_start;
 
-	map_start = check_textures_and_colors(map);
+	map_start = find_map_start(map);
+	check_textures_and_colors(map, map_start);
 	valid_map_char(map, map_start);
 	valid_map_walls(map, map_start);
 }
 
-int	check_textures_and_colors(t_map *map)
+void	check_textures_and_colors(t_map *map, int map_start)
 {
 	int	i;
 	int	flags;
+	int	j;
 
 	i = 0;
 	flags = 0;
-	while (map->lines[i])
+	while (map->lines[i] && i < map_start)
 	{
-		if (ft_strncmp(map->lines[i], "NO", 2) == 0 && flags == 0)
+		j = 0;
+		while (map->lines[i][j] == ' ')
+			j++;
+		if (ft_strncmp(map->lines[i] + j, "NO", 2) == 0)
 			flags += 32;
-		else if (ft_strncmp(map->lines[i], "SO", 2) == 0 && flags == 32)
+		else if (ft_strncmp(map->lines[i] + j, "SO", 2) == 0)
 			flags += 16;
-		else if (ft_strncmp(map->lines[i], "WE", 2) == 0 && flags == 48)
+		else if (ft_strncmp(map->lines[i] + j, "WE", 2) == 0)
 			flags += 8;
-		else if (ft_strncmp(map->lines[i], "EA", 2) == 0 && flags == 56)
+		else if (ft_strncmp(map->lines[i] + j, "EA", 2) == 0)
 			flags += 4;
-		else if (ft_strncmp(map->lines[i], "F", 1) == 0 && flags == 60)
+		i++;
+	}
+	flags += check_colors(map, map_start);
+	if (flags != 63)
+		destroy_map(map, "Not enough element in the map");
+}
+
+int	check_colors(t_map *map, int map_start)
+{
+	int	i;
+	int	flags;
+	int	j;
+
+	i = 0;
+	flags = 0;
+	while (map->lines[i] && i < map_start)
+	{
+		j = 0;
+		while (map->lines[i][j] == ' ')
+			j++;
+		if (ft_strncmp(map->lines[i] + j, "F", 1) == 0)
 			flags += 2;
-		else if (ft_strncmp(map->lines[i], "C", 1) == 0 && flags == 62)
+		else if (ft_strncmp(map->lines[i] + j, "C", 1) == 0)
 			flags += 1;
 		i++;
 	}
-	if (flags != 63)
-		destroy_map(map, "Not enough element in the map");
-	return (i);
+	return (flags);
 }
 
 void	valid_map_char(t_map *map, int i)
@@ -77,4 +102,23 @@ void	valid_map_char(t_map *map, int i)
 	}
 	if (!found_start)
 		destroy_map(map, "Starting position not found");
+}
+
+int	find_map_start(t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map->lines[i])
+	{
+		j = 0;
+		while (map->lines[i][j] == ' ')
+			j++;
+		if (map->lines[i][j] == '1' || map->lines[i][j] == '0')
+			return (i);
+		i++;
+	}
+	destroy_map(map, "No map found");
+	return (i);
 }
