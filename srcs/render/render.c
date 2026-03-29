@@ -1,5 +1,5 @@
 /* ************************************************************************** */
-/*                                                                            */
+
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -25,17 +25,16 @@ void	render_frame(t_game *g)
 
 static void	draw_walls(t_game *g)
 {
-	int		x;
 	t_ray	ray;
 
-	x = 0;
-	while (x < WIN_WIDTH)
+	ray.x = 0;
+	while (ray.x < WIN_WIDTH)
 	{
-		init_ray(g, &ray, x);
+		init_ray(g, &ray, ray.x);
 		init_dist(g, &ray);
 		dda(g, &ray);
 		draw_vertical_line(g, ray);
-		x++;
+		ray.x++;
 	}
 }
 

@@ -10,18 +10,19 @@ LIBFT_DIR = libft
 LIBFT     = $(LIBFT_DIR)/libft.a
 LIBFT_INC = -I$(LIBFT_DIR)
 
-SRCS    = src/main.c \
-		  src/map/parser.c \
-		  src/map/utils.c \
-		  src/map/valid_map.c \
-		  src/map/valid_walls.c \
-		  src/map/textures.c \
-		  src/mlx/init.c \
-		  src/update/update.c \
-		  src/update/collision.c \
-		  src/render/render.c \
-		  src/render/pixels.c \
-		  src/render/ray.c
+SRCS    = srcs/main.c \
+		  srcs/map/parser.c \
+		  srcs/map/utils.c \
+		  srcs/map/valid_map.c \
+		  srcs/map/valid_walls.c \
+		  srcs/map/textures.c \
+		  srcs/mlx/init.c \
+		  srcs/update/update.c \
+		  srcs/update/collision.c \
+		  srcs/render/render.c \
+		  srcs/render/pixels.c \
+		  srcs/render/ray.c \
+		  srcs/render/textures.c
 OBJS    = $(SRCS:%.c=build/%.o)
 
 INC     = $(MLX_INC) $(LIBFT_INC)

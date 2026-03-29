@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maxime <maxime@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 10:21:12 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/29 01:29:03 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/30 01:19:42 by maxime           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,6 @@ void	parse_and_validate(t_game *g, int ac, char **av)
 	check_valid_map(&g->map);
 	parse_textures(&g->map);
 	parse_map(g);
-
-	// print map
-	int	i;
-	int	j;
-	i = 0;
-	while (g->map.grid[i])
-	{
-		j = 0;
-		while (g->map.grid[i][j] != -1)
-		{
-			if (g->map.grid[i][j] != 0)
-				printf("%d ", g->map.grid[i][j]);
-			else
-				printf("  ");
-			j++;
-		}
-		printf("\n");
-		i++;
-	}
 }
 
 static void	parse_map(t_game *g)

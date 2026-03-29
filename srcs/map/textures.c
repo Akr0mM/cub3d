@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   textures.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maxime <maxime@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 18:54:06 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/28 23:52:45 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/30 01:21:01 by maxime           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ void	get_color(t_map *map, char *line, char *dir)
 		map->floor_color = (r << 16) | (g << 8) | b;
 	else
 		map->ceilling_color = (r << 16) | (g << 8) | b;
-
-	printf("%d %d %d\n", r, g, b);
 }
 
 void	load_textures(t_game *g)

@@ -20,8 +20,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-# define WIN_WIDTH 1500
-# define WIN_HEIGHT 900
+# define WIN_WIDTH 1300
+# define WIN_HEIGHT 750
 # define WIN_TITLE "cub3D"
 # define PLAYER_RADIUS 0.10
 
@@ -77,6 +77,7 @@ typedef struct s_camera
 
 typedef struct s_ray
 {
+  int     x;
 	double	camera_x;
 	t_vec2	ray;
 	int		map_x;
