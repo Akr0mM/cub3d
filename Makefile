@@ -14,7 +14,14 @@ SRCS    = src/main.c \
 		  src/map/parser.c \
 		  src/map/utils.c \
 		  src/map/valid_map.c \
-		  src/map/valid_walls.c
+		  src/map/valid_walls.c \
+		  src/map/textures.c \
+		  src/mlx/init.c \
+		  src/update/update.c \
+		  src/update/collision.c \
+		  src/render/render.c \
+		  src/render/pixels.c \
+		  src/render/ray.c
 OBJS    = $(SRCS:%.c=build/%.o)
 
 INC     = $(MLX_INC) $(LIBFT_INC)

@@ -6,7 +6,7 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 11:28:33 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/28 18:30:38 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/29 01:29:47 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ void	check_valid_map(t_map *map)
 	check_textures_and_colors(map, map_start);
 	valid_map_char(map, map_start);
 	valid_map_walls(map, map_start);
+	map->start = map_start;
 }
 
-void	check_textures_and_colors(t_map *map, int map_start)
+static void	check_textures_and_colors(t_map *map, int map_start)
 {
 	int	i;
 	int	flags;
@@ -55,7 +56,7 @@ void	check_textures_and_colors(t_map *map, int map_start)
 		destroy_map(map, "Not enough element in the map");
 }
 
-int	check_colors(t_map *map, int map_start)
+static int	check_colors(t_map *map, int map_start)
 {
 	int	i;
 	int	flags;
@@ -77,7 +78,7 @@ int	check_colors(t_map *map, int map_start)
 	return (flags);
 }
 
-void	valid_map_char(t_map *map, int i)
+static void	valid_map_char(t_map *map, int i)
 {
 	int	found_start;
 	int	j;
@@ -104,7 +105,7 @@ void	valid_map_char(t_map *map, int i)
 		destroy_map(map, "Starting position not found");
 }
 
-int	find_map_start(t_map *map)
+static int	find_map_start(t_map *map)
 {
 	int	i;
 	int	j;

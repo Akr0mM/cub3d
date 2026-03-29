@@ -6,7 +6,7 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 13:30:46 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/25 14:37:12 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/29 01:30:51 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	valid_map_walls(t_map *map, int i)
 	while (map->lines[i])
 	{
 		j = 0;
-		while (map->lines[i][j] != '\n' && map->lines[i][j] != '\0')
+		while (map->lines[i][j] && map->lines[i][j] != '\n')
 		{
 			if ((map->lines[i][j] == '0' || is_dir(map->lines[i][j]))
 				&& (rect_map[i - 1][j + 1] == ' '
@@ -48,6 +48,7 @@ void	create_rect_map(char ***rect_map, t_map *map, int start)
 	i = start;
 	while (map->lines[i])
 		i++;
+	map->size = i - start;
 	*rect_map = malloc(sizeof(char *) * (i + 2));
 	if (!*rect_map)
 		destroy_map(map, "Error malloc");
@@ -63,10 +64,11 @@ void	create_rect_map(char ***rect_map, t_map *map, int start)
 			max = j;
 		i++;
 	}
+	map->line_len = max;
 	fill_rect_map(rect_map, map, max, start);
 }
 
-void	fill_rect_map(char ***rect_map, t_map *map, int max, int start)
+static void	fill_rect_map(char ***rect_map, t_map *map, int max, int start)
 {
 	int	i;
 	int	j;
@@ -87,7 +89,7 @@ void	fill_rect_map(char ***rect_map, t_map *map, int max, int start)
 	(*rect_map)[i] = empty_line(map, w);
 }
 
-char	*empty_line(t_map *map, int w)
+static char	*empty_line(t_map *map, int w)
 {
 	char	*line;
 	int		j;
@@ -102,7 +104,7 @@ char	*empty_line(t_map *map, int w)
 	return (line);
 }
 
-void	free_rect_map(char ***rect_map)
+static void	free_rect_map(char ***rect_map)
 {
 	int	i;
 
