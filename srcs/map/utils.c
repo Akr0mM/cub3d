@@ -6,7 +6,7 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 11:21:24 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/29 03:54:39 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/31 22:38:36 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,16 @@ int	is_dir(char c)
 	return (0);
 }
 
-int	valid_map_name(char *name)
+void	valid_map_name(char *name)
 {
-	(void)name;
-	return (1);
+	int	i;
+
+	i = 0;
+	while (name[i])
+		i++;
+	if (name[i - 1] != 'b' || name[i - 2] != 'u'
+		|| name[i - 3] != 'c' || name[i - 4] != '.')
+		print_error("Not a valid map extension");
 }
 
 void	init_cam_dir(t_game *g, char dir)

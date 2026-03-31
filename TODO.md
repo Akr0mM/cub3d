@@ -1,1 +1,0 @@
-- valid check les color en r,g,b

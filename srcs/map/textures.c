@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   textures.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxime <maxime@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 18:54:06 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/30 01:21:01 by maxime           ###   ########.fr       */
+/*   Updated: 2026/03/31 22:33:41 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,24 @@ void	alloc_map(t_map *map)
 		i++;
 	}
 	map->grid[i] = NULL;
+}
+
+void	check_color_line(t_map *map, char *line, int i)
+{
+	int	nb;
+
+	nb = 0;
+	while (line[i] == ' ')
+		i++;
+	while (line[i] && line[i] != '\n')
+	{
+		if (line[i] == ',')
+			nb++;
+		if ((line[i] != ',' && (line[i] < '0' || line[i] > '9'))
+			|| (line[i] == ',' && (line[i + 1] < '0' || line[i + 1] > '9')))
+			destroy_map(map, "Invalid color");
+		i++;
+	}
+	if (nb != 2)
+		destroy_map(map, "Invalid color");
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxime <maxime@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 10:21:12 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/30 01:19:42 by maxime           ###   ########.fr       */
+/*   Updated: 2026/03/31 22:38:45 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ void	parse_and_validate(t_game *g, int ac, char **av)
 {
 	if (ac != 2)
 		print_error("Not a valid number of arguments");
-	if (!valid_map_name(av[1]))
-		print_error("Not a valid map extension");
+	valid_map_name(av[1]);
 	get_each_lines(&g->map, av[1]);
 	check_valid_map(&g->map);
 	parse_textures(&g->map);

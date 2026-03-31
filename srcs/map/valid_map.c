@@ -6,7 +6,7 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 11:28:33 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/29 01:29:47 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/31 22:31:42 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,15 @@ static int	check_colors(t_map *map, int map_start)
 		while (map->lines[i][j] == ' ')
 			j++;
 		if (ft_strncmp(map->lines[i] + j, "F", 1) == 0)
+		{
 			flags += 2;
+			check_color_line(map, map->lines[i], j + 1);
+		}
 		else if (ft_strncmp(map->lines[i] + j, "C", 1) == 0)
+		{
 			flags += 1;
+			check_color_line(map, map->lines[i], j + 1);
+		}
 		i++;
 	}
 	return (flags);

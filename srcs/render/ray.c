@@ -6,7 +6,7 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/29 04:52:10 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/29 04:52:45 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/31 22:01:32 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ void	init_ray(t_game *g, t_ray *ray, int x)
 	ray->camera_x = 2.0 * x / (double)WIN_WIDTH - 1.0;
 	ray->ray.x = g->cam.dir.x + g->cam.plane.x * ray->camera_x;
 	ray->ray.y = g->cam.dir.y + g->cam.plane.y * ray->camera_x;
-
 	ray->map_x = (int)g->cam.pos.x;
 	ray->map_y = (int)g->cam.pos.y;
-
 	if (ray->ray.x == 0)
 		ray->delta_dist_x = 1e30;
 	else

@@ -6,7 +6,7 @@
 /*   By: mfaivre <mfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 10:18:18 by mfaivre           #+#    #+#             */
-/*   Updated: 2026/03/29 04:44:42 by mfaivre          ###   ########.fr       */
+/*   Updated: 2026/03/31 22:00:53 by mfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct s_camera
 
 typedef struct s_ray
 {
-  int     x;
+	int		x;
 	double	camera_x;
 	t_vec2	ray;
 	int		map_x;
