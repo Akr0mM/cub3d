@@ -1,6 +1,6 @@
 NAME    = cub3D
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror
+CFLAGS  = -Wall -Wextra -Werror -std=gnu99
 
 MLX_DIR   = minilibx-linux
 MLX_INC   = -Iinclude -I$(MLX_DIR)
@@ -30,7 +30,7 @@ INC     = $(MLX_INC) $(LIBFT_INC)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(MAKE) -C $(MLX_DIR)
+	$(MAKE) -C $(MLX_DIR) CC="$(CC) -std=gnu99"
 	$(CC) $(CFLAGS) $(OBJS) $(INC) $(MLX_LIB) -L$(LIBFT_DIR) -lft -o $(NAME)
 
 $(LIBFT):
