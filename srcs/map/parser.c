@@ -12,7 +12,7 @@
 
 #include "map.h"
 
-static void	init_lines(t_map *map, char *map_file);
+static int	init_lines(t_map *map, char *map_file);
 static void	get_each_lines(t_map *map, char *map_file);
 static void	parse_textures(t_map *map);
 static void	parse_map(t_game *g);
@@ -63,19 +63,19 @@ static void	parse_textures(t_map *map)
 	int	j;
 
 	i = 0;
-	while (map->lines[i])
+	while (i < map->start)
 	{
 		j = 0;
 		while (map->lines[i][j] == ' ')
 			j++;
 		if (ft_strncmp(map->lines[i] + j, "NO", 2) == 0)
-			get_texture(map, map->lines[i] + j, "NO");
+			get_texture(map, map->lines[i] + j + 2, "NO");
 		else if (ft_strncmp(map->lines[i] + j, "SO", 2) == 0)
-			get_texture(map, map->lines[i] + j, "SO");
+			get_texture(map, map->lines[i] + j + 2, "SO");
 		else if (ft_strncmp(map->lines[i] + j, "WE", 2) == 0)
-			get_texture(map, map->lines[i] + j, "WE");
+			get_texture(map, map->lines[i] + j + 2, "WE");
 		else if (ft_strncmp(map->lines[i] + j, "EA", 2) == 0)
-			get_texture(map, map->lines[i] + j, "EA");
+			get_texture(map, map->lines[i] + j + 2, "EA");
 		else if (ft_strncmp(map->lines[i] + j, "F", 1) == 0)
 			get_color(map, map->lines[i] + j, "F");
 		else if (ft_strncmp(map->lines[i] + j, "C", 1) == 0)
@@ -88,23 +88,30 @@ static void	get_each_lines(t_map *map, char *map_file)
 {
 	int		fd;
 	int		i;
+	int		nb;
 	char	*line;
 
-	init_lines(map, map_file);
+	nb = init_lines(map, map_file);
 	i = 0;
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)
-		print_perror("map: open");
+		destroy_map(map, "Could not reopen map");
 	line = get_next_line(fd);
-	while (line)
+	while (line && i < nb)
 	{
 		map->lines[i++] = line;
 		line = get_next_line(fd);
 	}
 	close(fd);
+	if (line || i != nb)
+	{
+		free(line);
+		get_next_line(-1);
+		destroy_map(map, "Could not read the whole map");
+	}
 }
 
-static void	init_lines(t_map *map, char *map_file)
+static int	init_lines(t_map *map, char *map_file)
 {
 	int		nb;
 	int		fd;
@@ -122,8 +129,8 @@ static void	init_lines(t_map *map, char *map_file)
 		line = get_next_line(fd);
 	}
 	close(fd);
-	map->lines = malloc(sizeof(char *) * (nb + 1));
+	map->lines = ft_calloc(nb + 1, sizeof(char *));
 	if (!map->lines)
 		print_error("Malloc error");
-	map->lines[nb] = NULL;
+	return (nb);
 }

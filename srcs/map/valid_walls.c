@@ -14,7 +14,7 @@
 
 static void	free_rect_map(char ***rect_map);
 static void	fill_rect_map(char ***rect_map, t_map *map, int max, int start);
-static char	*empty_line(t_map *map, int w);
+static char	*empty_line(t_map *map, int w, char ***rect_map);
 
 void	valid_map_walls(t_map *map, int i)
 {
@@ -31,7 +31,10 @@ void	valid_map_walls(t_map *map, int i)
 				&& (rect_map[i - 1][j + 1] == ' '
 					|| rect_map[i + 1][j + 1] == ' ' || rect_map[i][j] == ' '
 						|| rect_map[i][j + 2] == ' '))
+			{
+				free_rect_map(&rect_map);
 				destroy_map(map, "Map is not closed by walls");
+			}
 			j++;
 		}
 		i++;
@@ -49,10 +52,9 @@ void	create_rect_map(char ***rect_map, t_map *map, int start)
 	while (map->lines[i])
 		i++;
 	map->size = i - start;
-	*rect_map = malloc(sizeof(char *) * (i + 2));
+	*rect_map = ft_calloc(i + 2, sizeof(char *));
 	if (!*rect_map)
 		destroy_map(map, "Error malloc");
-	(*rect_map)[i + 1] = NULL;
 	i = start;
 	max = 0;
 	while (map->lines[i])
@@ -77,26 +79,29 @@ static void	fill_rect_map(char ***rect_map, t_map *map, int max, int start)
 	w = max + 2;
 	i = 0;
 	while (i < start)
-		(*rect_map)[i++] = empty_line(map, w);
+		(*rect_map)[i++] = empty_line(map, w, rect_map);
 	while (map->lines[i])
 	{
-		(*rect_map)[i] = empty_line(map, w);
+		(*rect_map)[i] = empty_line(map, w, rect_map);
 		j = -1;
 		while (++j < max && map->lines[i][j] && map->lines[i][j] != '\n')
 			(*rect_map)[i][j + 1] = map->lines[i][j];
 		(*rect_map)[i++][w] = '\0';
 	}
-	(*rect_map)[i] = empty_line(map, w);
+	(*rect_map)[i] = empty_line(map, w, rect_map);
 }
 
-static char	*empty_line(t_map *map, int w)
+static char	*empty_line(t_map *map, int w, char ***rect_map)
 {
 	char	*line;
 	int		j;
 
 	line = malloc(w + 1);
 	if (!line)
+	{
+		free_rect_map(rect_map);
 		destroy_map(map, "Malloc error");
+	}
 	j = -1;
 	while (++j < w)
 		line[j] = ' ';

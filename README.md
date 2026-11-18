@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by mfaivre*
+*This project has been created as part of the 42 curriculum by mfaivre, laissi.*
 
 # cub3d
 
@@ -23,7 +23,7 @@ In this repository, invalid configuration files are rejected before the game sta
 
 ### Requirements
 
-This version is set up for Linux and expects the MiniLibX sources in a `minilibx-linux/` directory at the root of the project.
+This project runs on Linux and includes the MiniLibX sources in the `minilibx-linux/` directory.
 
 Required tools and libraries:
 
@@ -38,12 +38,6 @@ Example packages on Debian/Ubuntu:
 
 ```
 sudo apt-get install build-essential xorg libxext-dev zlib1g-dev libbsd-dev
-```
-
-If `minilibx-linux/` is missing, add it at the project root:
-
-```
-git clone https://github.com/42paris/minilibx-linux minilibx-linux
 ```
 
 ### Compilation
@@ -65,10 +59,10 @@ make re
 Run the program with a valid `.cub` map:
 
 ```
-./cub3D maps/map.cub
+./cub3D maps/default.cub
 ```
 
-Depending on the repository, other sample maps may also be available in the `maps/` directory.
+A second example is available at `maps/test.cub`.
 
 ### Controls
 
@@ -117,4 +111,4 @@ A valid implementation must ensure that the `.cub` file is parsed correctly, tex
 * Wolfenstein 3D raycasting overview: https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/
 * 42 subject and project material provided on the intra
 
-AI usage: AI was used only to write this `README.md`. It was not used for the project design, implementation, debugging, or testing.
+AI was used to help write this README, audit the parser and MiniLibX error handling, propose and implement targeted fixes, and run compilation, Norminette, and runtime checks.

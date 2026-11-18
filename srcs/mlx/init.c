@@ -25,7 +25,7 @@ void	init_mlx(t_game *g)
 	g->win = mlx_new_window(g->mlx,
 			WIN_WIDTH, WIN_HEIGHT, WIN_TITLE);
 	if (!g->win)
-		destroy_all(g, "mlx_mew_window failed");
+		destroy_all(g, "mlx_new_window failed");
 	mlx_hook(g->win, KeyPress, KeyPressMask, &handle_key_press, g);
 	mlx_hook(g->win, KeyRelease, KeyReleaseMask, &handle_key_release, g);
 	mlx_hook(g->win, DestroyNotify, StructureNotifyMask,
@@ -35,6 +35,8 @@ void	init_mlx(t_game *g)
 	g->frame_buffer.width = WIN_WIDTH;
 	g->frame_buffer.height = WIN_HEIGHT;
 	g->frame_buffer.img = mlx_new_image(g->mlx, WIN_WIDTH, WIN_HEIGHT);
+	if (!g->frame_buffer.img)
+		destroy_all(g, "mlx_new_image failed");
 	g->frame_buffer.addr = mlx_get_data_addr(
 			g->frame_buffer.img,
 			&g->frame_buffer.bpp,
@@ -87,11 +89,16 @@ static int	handle_key_release(int keysym, t_game *g)
 
 void	destroy_mlx(t_game *g)
 {
-	mlx_destroy_image(g->mlx, g->frame_buffer.img);
-	mlx_destroy_image(g->mlx, g->map.textures.no.img);
-	mlx_destroy_image(g->mlx, g->map.textures.so.img);
-	mlx_destroy_image(g->mlx, g->map.textures.we.img);
-	mlx_destroy_image(g->mlx, g->map.textures.ea.img);
+	if (g->frame_buffer.img)
+		mlx_destroy_image(g->mlx, g->frame_buffer.img);
+	if (g->map.textures.no.img)
+		mlx_destroy_image(g->mlx, g->map.textures.no.img);
+	if (g->map.textures.so.img)
+		mlx_destroy_image(g->mlx, g->map.textures.so.img);
+	if (g->map.textures.we.img)
+		mlx_destroy_image(g->mlx, g->map.textures.we.img);
+	if (g->map.textures.ea.img)
+		mlx_destroy_image(g->mlx, g->map.textures.ea.img);
 	if (g->win)
 		mlx_destroy_window(g->mlx, g->win);
 	if (g->mlx)

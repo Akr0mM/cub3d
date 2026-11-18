@@ -49,13 +49,10 @@ int	is_dir(char c)
 
 void	valid_map_name(char *name)
 {
-	int	i;
+	size_t	len;
 
-	i = 0;
-	while (name[i])
-		i++;
-	if (name[i - 1] != 'b' || name[i - 2] != 'u'
-		|| name[i - 3] != 'c' || name[i - 4] != '.')
+	len = ft_strlen(name);
+	if (len < 4 || ft_strcmp(name + len - 4, ".cub") != 0)
 		print_error("Not a valid map extension");
 }
 

@@ -32,6 +32,5 @@ void	load_textures(t_game *g);
 void	alloc_map(t_map *map);
 void	get_color(t_map *map, char *line, char *dir);
 void	init_cam_dir(t_game *g, char dir);
-void	check_color_line(t_map *map, char *line, int i);
 
 #endif

@@ -21,9 +21,7 @@ int	main(int ac, char **av)
 {
 	t_game	g;
 
-	g.mlx = NULL;
-	g.win = NULL;
-	g.keys = (t_keys){0};
+	ft_bzero(&g, sizeof(g));
 	parse_and_validate(&g, ac, av);
 	init_mlx(&g);
 	mlx_loop(g.mlx);

@@ -15,7 +15,7 @@
 static void	valid_map_char(t_map *map, int start);
 static void	check_textures_and_colors(t_map *map, int map_start);
 static int	find_map_start(t_map *map);
-static int	check_colors(t_map *map, int map_start);
+static int	get_element_flag(char *line);
 
 void	check_valid_map(t_map *map)
 {
@@ -30,58 +30,46 @@ void	check_valid_map(t_map *map)
 
 static void	check_textures_and_colors(t_map *map, int map_start)
 {
-	int	i;
-	int	flags;
-	int	j;
+	int		i;
+	int		flags;
+	int		flag;
+	char	*line;
 
 	i = 0;
 	flags = 0;
-	while (map->lines[i] && i < map_start)
+	while (i < map_start)
 	{
-		j = 0;
-		while (map->lines[i][j] == ' ')
-			j++;
-		if (ft_strncmp(map->lines[i] + j, "NO", 2) == 0)
-			flags += 32;
-		else if (ft_strncmp(map->lines[i] + j, "SO", 2) == 0)
-			flags += 16;
-		else if (ft_strncmp(map->lines[i] + j, "WE", 2) == 0)
-			flags += 8;
-		else if (ft_strncmp(map->lines[i] + j, "EA", 2) == 0)
-			flags += 4;
-		i++;
+		line = map->lines[i++];
+		while (*line == ' ')
+			line++;
+		flag = get_element_flag(line);
+		if (flag < 0)
+			destroy_map(map, "Unknown or invalid scene element");
+		if (flags & flag)
+			destroy_map(map, "Duplicate scene element");
+		flags |= flag;
 	}
-	flags += check_colors(map, map_start);
 	if (flags != 63)
-		destroy_map(map, "Not enough element in the map");
+		destroy_map(map, "Missing texture or color");
 }
 
-static int	check_colors(t_map *map, int map_start)
+static int	get_element_flag(char *line)
 {
-	int	i;
-	int	flags;
-	int	j;
-
-	i = 0;
-	flags = 0;
-	while (map->lines[i] && i < map_start)
-	{
-		j = 0;
-		while (map->lines[i][j] == ' ')
-			j++;
-		if (ft_strncmp(map->lines[i] + j, "F", 1) == 0)
-		{
-			flags += 2;
-			check_color_line(map, map->lines[i], j + 1);
-		}
-		else if (ft_strncmp(map->lines[i] + j, "C", 1) == 0)
-		{
-			flags += 1;
-			check_color_line(map, map->lines[i], j + 1);
-		}
-		i++;
-	}
-	return (flags);
+	if (!*line || *line == '\n')
+		return (0);
+	if (ft_strncmp(line, "NO ", 3) == 0)
+		return (32);
+	if (ft_strncmp(line, "SO ", 3) == 0)
+		return (16);
+	if (ft_strncmp(line, "WE ", 3) == 0)
+		return (8);
+	if (ft_strncmp(line, "EA ", 3) == 0)
+		return (4);
+	if (ft_strncmp(line, "F ", 2) == 0)
+		return (2);
+	if (ft_strncmp(line, "C ", 2) == 0)
+		return (1);
+	return (-1);
 }
 
 static void	valid_map_char(t_map *map, int i)
@@ -92,12 +80,13 @@ static void	valid_map_char(t_map *map, int i)
 	found_start = 0;
 	while (map->lines[i])
 	{
+		if (map->lines[i][0] == '\n')
+			destroy_map(map, "Empty line in the map");
 		j = 0;
 		while (map->lines[i][j] != '\n' && map->lines[i][j] != '\0')
 		{
 			if (map->lines[i][j] != ' ' && map->lines[i][j] != '0'
-					&& map->lines[i][j] != '1' && !is_dir(map->lines[i][j])
-						&& !found_start)
+				&& map->lines[i][j] != '1' && !is_dir(map->lines[i][j]))
 				destroy_map(map, "Wrong character found in map");
 			if (found_start && is_dir(map->lines[i][j]))
 				destroy_map(map, "Starting position found twice");

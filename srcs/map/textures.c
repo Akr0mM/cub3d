@@ -14,45 +14,68 @@
 
 void	get_texture(t_map *map, char *line, char *dir)
 {
-	int	i;
-	int	j;
+	int		len;
+	char	*end;
+	char	*path;
 
-	i = 0;
-	line += 2;
-	while (line[i] == ' ')
-		i++;
-	j = i;
-	while (line[j] && line[j] != ' ' && line[j] != '\n')
-		j++;
+	while (*line == ' ')
+		line++;
+	len = 0;
+	while (line[len] && line[len] != ' ' && line[len] != '\n')
+		len++;
+	end = line + len;
+	while (*end == ' ')
+		end++;
+	if (!len || (*end && *end != '\n'))
+		destroy_map(map, "Invalid texture path");
+	path = ft_strndup(line, len);
+	if (!path)
+		destroy_map(map, "Malloc error");
 	if (ft_strcmp(dir, "NO") == 0)
-		map->textures.no_path = ft_strndup(line + i, j - i);
+		map->textures.no_path = path;
 	else if (ft_strcmp(dir, "SO") == 0)
-		map->textures.so_path = ft_strndup(line + i, j - i);
+		map->textures.so_path = path;
 	else if (ft_strcmp(dir, "WE") == 0)
-		map->textures.we_path = ft_strndup(line + i, j - i);
-	else if (ft_strcmp(dir, "EA") == 0)
-		map->textures.ea_path = ft_strndup(line + i, j - i);
+		map->textures.we_path = path;
+	else
+		map->textures.ea_path = path;
+}
+
+static int	get_color_value(t_map *map, char **line, char separator)
+{
+	int	value;
+
+	while (**line == ' ')
+		(*line)++;
+	if (!ft_isdigit(**line))
+		destroy_map(map, "Invalid color");
+	value = 0;
+	while (ft_isdigit(**line))
+	{
+		value = value * 10 + **line - '0';
+		if (value > 255)
+			destroy_map(map, "Invalid color");
+		(*line)++;
+	}
+	while (**line == ' ')
+		(*line)++;
+	if (**line == separator)
+		(*line)++;
+	else if (**line || separator == ',')
+		destroy_map(map, "Invalid color");
+	return (value);
 }
 
 void	get_color(t_map *map, char *line, char *dir)
 {
-	int	i;
 	int	r;
 	int	g;
 	int	b;
 
 	line += 1;
-	i = 0;
-	while (line[i] == ' ')
-		i++;
-	r = ft_atoi(line + i);
-	while (line[i - 1] != ',')
-		i++;
-	g = ft_atoi(line + i);
-	i++;
-	while (line[i - 1] != ',')
-		i++;
-	b = ft_atoi(line + i);
+	r = get_color_value(map, &line, ',');
+	g = get_color_value(map, &line, ',');
+	b = get_color_value(map, &line, '\n');
 	if (ft_strcmp(dir, "F") == 0)
 		map->floor_color = (r << 16) | (g << 8) | b;
 	else
@@ -61,37 +84,34 @@ void	get_color(t_map *map, char *line, char *dir)
 
 void	load_textures(t_game *g)
 {
-	g->map.textures.no.img = mlx_xpm_file_to_image(g->mlx,
-			g->map.textures.no_path, &g->map.textures.no.width,
-			&g->map.textures.no.height);
-	g->map.textures.so.img = mlx_xpm_file_to_image(g->mlx,
-			g->map.textures.so_path, &g->map.textures.so.width,
-			&g->map.textures.so.height);
-	g->map.textures.we.img = mlx_xpm_file_to_image(g->mlx,
-			g->map.textures.we_path, &g->map.textures.we.width,
-			&g->map.textures.we.height);
-	g->map.textures.ea.img = mlx_xpm_file_to_image(g->mlx,
-			g->map.textures.ea_path, &g->map.textures.ea.width,
-			&g->map.textures.ea.height);
-	g->map.textures.no.addr = mlx_get_data_addr(g->map.textures.no.img,
-			&g->map.textures.no.bpp, &g->map.textures.no.line_len,
-			&g->map.textures.no.endian);
-	g->map.textures.so.addr = mlx_get_data_addr(g->map.textures.so.img,
-			&g->map.textures.so.bpp, &g->map.textures.so.line_len,
-			&g->map.textures.so.endian);
-	g->map.textures.we.addr = mlx_get_data_addr(g->map.textures.we.img,
-			&g->map.textures.we.bpp, &g->map.textures.we.line_len,
-			&g->map.textures.we.endian);
-	g->map.textures.ea.addr = mlx_get_data_addr(g->map.textures.ea.img,
-			&g->map.textures.ea.bpp, &g->map.textures.ea.line_len,
-			&g->map.textures.ea.endian);
+	t_textures	*t;
+
+	t = &g->map.textures;
+	t->no.img = mlx_xpm_file_to_image(g->mlx, t->no_path,
+			&t->no.width, &t->no.height);
+	t->so.img = mlx_xpm_file_to_image(g->mlx, t->so_path,
+			&t->so.width, &t->so.height);
+	t->we.img = mlx_xpm_file_to_image(g->mlx, t->we_path,
+			&t->we.width, &t->we.height);
+	t->ea.img = mlx_xpm_file_to_image(g->mlx, t->ea_path,
+			&t->ea.width, &t->ea.height);
+	if (!t->no.img || !t->so.img || !t->we.img || !t->ea.img)
+		destroy_all(g, "Could not load wall texture");
+	t->no.addr = mlx_get_data_addr(t->no.img,
+			&t->no.bpp, &t->no.line_len, &t->no.endian);
+	t->so.addr = mlx_get_data_addr(t->so.img,
+			&t->so.bpp, &t->so.line_len, &t->so.endian);
+	t->we.addr = mlx_get_data_addr(t->we.img,
+			&t->we.bpp, &t->we.line_len, &t->we.endian);
+	t->ea.addr = mlx_get_data_addr(t->ea.img,
+			&t->ea.bpp, &t->ea.line_len, &t->ea.endian);
 }
 
 void	alloc_map(t_map *map)
 {
 	int	i;
 
-	map->grid = malloc(sizeof(int *) * (map->size + 1));
+	map->grid = ft_calloc(map->size + 1, sizeof(int *));
 	if (!map->grid)
 		destroy_map(map, "Malloc error");
 	i = 0;
@@ -102,25 +122,4 @@ void	alloc_map(t_map *map)
 			destroy_map(map, "Malloc error");
 		i++;
 	}
-	map->grid[i] = NULL;
-}
-
-void	check_color_line(t_map *map, char *line, int i)
-{
-	int	nb;
-
-	nb = 0;
-	while (line[i] == ' ')
-		i++;
-	while (line[i] && line[i] != '\n')
-	{
-		if (line[i] == ',')
-			nb++;
-		if ((line[i] != ',' && (line[i] < '0' || line[i] > '9'))
-			|| (line[i] == ',' && (line[i + 1] < '0' || line[i + 1] > '9')))
-			destroy_map(map, "Invalid color");
-		i++;
-	}
-	if (nb != 2)
-		destroy_map(map, "Invalid color");
 }
